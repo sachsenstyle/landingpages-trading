@@ -110,6 +110,21 @@ h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.8rem,3.5vw,2.5rem)
 .signup-done p{color:#C4D1E4}
 @media (max-width:820px){.signup-fields{grid-template-columns:1fr}}
 
+
+/* MailerLite-Formular im Seiten-Design */
+.signup .ml-form-embedContainer,.signup .ml-form-embedWrapper,.signup .ml-form-embedBody{background:transparent!important;border:0!important;padding:0!important;margin:0!important;max-width:100%!important;width:100%!important;box-shadow:none!important}
+.signup .ml-form-embedContent{display:none!important}
+.signup .ml-form-formContent{display:grid!important;grid-template-columns:1fr 1fr;gap:1rem;margin:0 0 1rem!important}
+.signup .ml-form-fieldRow{margin:0!important;padding:0!important;width:100%!important}
+.signup input.form-control{font-family:var(--sans)!important;font-size:1.1rem!important;padding:.8rem .9rem!important;border-radius:6px!important;border:1px solid #9FB4D3!important;background:#fff!important;color:var(--text)!important;min-height:3.6rem!important;height:auto!important;width:100%!important}
+.signup .ml-form-embedSubmit{margin:0!important;width:100%!important}
+.signup .ml-form-embedSubmit button{font-family:var(--sans)!important;font-weight:700!important;font-size:1.1rem!important;background:var(--gold)!important;color:var(--navy)!important;border:0!important;border-radius:6px!important;min-height:3.6rem!important;height:auto!important;width:100%!important;padding:.8rem 1.5rem!important;cursor:pointer}
+.signup .ml-form-embedSubmit button:hover{background:#EBC36C!important}
+.signup .ml-form-successBody,.signup .ml-form-successContent{background:transparent!important;padding:0!important}
+.signup .ml-form-successContent h4,.signup .ml-form-successContent p{color:#fff!important;font-family:var(--sans)!important;text-align:left!important}
+.signup .ml-form-successContent h4{font-family:var(--serif)!important;font-size:1.5rem!important;margin-bottom:.5rem!important}
+@media (max-width:820px){.signup .ml-form-formContent{grid-template-columns:1fr}}
+
 footer{background:var(--navy);color:#A9BAD3;padding:2rem 0;font-size:.95rem}
 footer .wrap{display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:space-between}
 footer nav{display:flex;gap:1.5rem}
@@ -137,6 +152,15 @@ footer a{color:#D5DFEE}
   .btn{width:100%}
 }
 </style>
+<!-- MailerLite Universal -->
+<script>
+(function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+.push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+(window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+ml('account', '2329335');
+</script>
+<!-- End MailerLite Universal -->
 </head>
 <body>
 
@@ -254,25 +278,10 @@ footer a{color:#D5DFEE}
         </div>
       </div>
 
-      <!-- MailerLite: Die Adresse bei action="" wird durch die aus deinem MailerLite-Formular ersetzt -->
-      <form class="signup" id="ml-form" action="MAILERLITE_FORM_URL" method="post" target="ml-frame">
-        <div class="signup-fields">
-          <label>Vorname
-            <input type="text" name="fields[name]" autocomplete="given-name" required>
-          </label>
-          <label>E-Mail-Adresse
-            <input type="email" name="fields[email]" autocomplete="email" required>
-          </label>
-          <input type="hidden" name="ml-submit" value="1">
-          <input type="hidden" name="anticsrf" value="true">
-          <button class="btn btn-gold" type="submit">Geschenke anfordern</button>
-        </div>
+      <!-- MailerLite-Formular "Freebie Band 3" (Gruppe KI-Trading Band 3) -->
+      <div class="signup">
+        <div class="ml-embedded" data-form="7ctyOE"></div>
         <p class="consent">Mit dem Eintragen erhältst du die Geschenke und gelegentlich E-Mails rund um KI und Trading. Abmelden kannst du dich jederzeit mit einem Klick. Mehr dazu in der <a href="#">Datenschutzerklärung</a>.</p>
-      </form>
-      <iframe name="ml-frame" title="Anmeldung" hidden></iframe>
-      <div class="signup-done" id="ml-done" hidden>
-        <h3>Fast geschafft!</h3>
-        <p>Schau jetzt in dein Postfach und bestätige deine E-Mail-Adresse. Danach kommen deine Geschenke sofort. Keine Mail da? Dann schau bitte auch im Spam-Ordner nach.</p>
       </div>
     </div>
   </section>
@@ -300,12 +309,25 @@ footer a{color:#D5DFEE}
   </div>
 </footer>
 
+
 <script>
 (function(){
-  var f=document.getElementById('ml-form');
-  f.addEventListener('submit',function(){
-    setTimeout(function(){f.hidden=true;document.getElementById('ml-done').hidden=false;},600);
-  });
+  var box=document.querySelector('.signup');
+  function fix(){
+    box.querySelectorAll('input.form-control').forEach(function(i){
+      var n=(i.name||'').toLowerCase();
+      if(n.indexOf('email')>-1) i.placeholder='E-Mail-Adresse';
+      if(n.indexOf('name')>-1) i.placeholder='Vorname';
+    });
+    var b=box.querySelector('.ml-form-embedSubmit button.primary');
+    if(b && b.textContent.trim()!=='Geschenke anfordern') b.textContent='Geschenke anfordern';
+    var h=box.querySelector('.ml-form-successContent h4');
+    if(h && h.textContent!=='Fast geschafft!') h.textContent='Fast geschafft!';
+    var p=box.querySelector('.ml-form-successContent p');
+    if(p && p.dataset.done!=='1'){p.textContent='Schau jetzt in dein Postfach und bestätige deine E-Mail-Adresse. Danach kommen deine Geschenke sofort. Keine Mail da? Dann schau bitte auch im Spam-Ordner nach.';p.dataset.done='1';}
+  }
+  new MutationObserver(fix).observe(box,{childList:true,subtree:true});
+  fix();
 })();
 </script>
 </body>
